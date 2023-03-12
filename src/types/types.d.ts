@@ -1,0 +1,1 @@
+export type Recorable = Record<string, unknown>;

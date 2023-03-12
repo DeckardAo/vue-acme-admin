@@ -1,0 +1,51 @@
+.acme-message {
+    min-width: 200px;
+    height: 38px;
+    text-align: center;
+    line-height: 38px;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.acme-message-success {
+    background-color: #e1f3d8;
+    color: #95d475;
+}
+
+.acme-message-error {
+    background-color: #6d1d29;
+    color: #e1f3d8;
+}
+
+.acme-message-box {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: identifier .3s ease;
+}
+
+.hide {
+    top: -38px;
+    animation: hide .3s ease;
+}
+
+@keyframes identifier {
+    0% {
+        top: 0;
+    }
+
+    100% {
+        top: 50px;
+    }
+}
+
+@keyframes hide {
+    0% {
+        top: 50px;
+    }
+
+    100% {
+        top: -38px;
+    } 
+}

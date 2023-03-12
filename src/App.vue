@@ -1,8 +1,5 @@
 <template>
-    <div>
-        <a-button type="primary">我你爹</a-button>
-        <a href="#">擦</a>
-    </div>
+    <router-view />
 </template>
 <script setup lang="ts">
 
