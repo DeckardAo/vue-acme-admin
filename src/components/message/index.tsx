@@ -6,7 +6,7 @@ import { Recorable } from '@/types/types';
 
 type messageType = 'success' | 'info' | 'warning' | 'error' | 'loading';
 
-const Message = defineComponent({
+const MessageComponent = defineComponent({
     props: {
         type: {
             type: Object as PropType<messageType>,
@@ -32,7 +32,7 @@ const Message = defineComponent({
 
 
 function showMessage(message: string, style: Recorable = {}, type: messageType = 'success', duration?: number) {
-    const vm = createVNode(Message, {message, type}, message);
+    const vm = createVNode(MessageComponent, {message, type}, message);
     const div = document.createElement('div');
     document.body.appendChild(div);
 
@@ -67,3 +67,15 @@ export function success(message: string) {
 export function error(message: string) {
     showMessage(message, {}, 'error', 2000);
 }
+
+export interface MessageInterface {
+    success(message: string): void;
+    error(message: string): void;
+}
+
+const Message: MessageInterface = {
+    success,
+    error
+};
+
+export default Message;

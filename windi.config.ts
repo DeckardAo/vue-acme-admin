@@ -9,7 +9,7 @@ export default defineConfig({
         backgroundColor: theme => ({
             ...theme('colors'),
             primary: config.theme.primary,
-            secondary: '#ffed4a',
+            secondary: '#2b333e',
         }),
         extend: {
             colors: {

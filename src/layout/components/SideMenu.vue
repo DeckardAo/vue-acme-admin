@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useSettingsStore } from '@/store';
-import { success, error } from '@/components/message';
+import Message from '@/components/message';
 import { CheckCircleOutlined, MailOutlined } from '@ant-design/icons-vue';
 
 const openKeys = ref([]);
@@ -36,11 +36,11 @@ const settingsStore = useSettingsStore();
 const menus = computed(() => settingsStore.menus);
 
 setTimeout(() => {
-    success('我你爹');
+    Message.success('我你爹');
 }, 1000); 
 
 setTimeout(() => {
-    error('傻逼吧你');
+    Message.error('傻逼吧你');
 }, 4000); 
 
 
