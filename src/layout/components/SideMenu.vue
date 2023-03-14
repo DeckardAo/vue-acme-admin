@@ -6,26 +6,35 @@
             mode="inline"
             theme="dark"
             :inline-collapsed="collapsed"
+            @click="onMenuChange"
         >
-            <a-menu-item
+            <template
                 v-for="item in menus"
-                :key="item.path"
-                :icon="item.meta.icon"
+                :key="item.key"
             >
-                <template #icon>
-                    <MailOutlined />
-                    <check-circle-outlined />
+                <template v-if="!item.children">
+                    <a-menu-item :key="item.path">
+                        <template #icon>
+                            <PieChartOutlined />
+                        </template>
+                        {{ item.meta.title }}
+                    </a-menu-item>
                 </template>
-                {{ item.meta.title }}
-            </a-menu-item>
+                <template v-else>
+                    <Submenu
+                        :key="item.path"
+                        :menu-info="item"
+                    />
+                </template>
+            </template>
         </a-menu>
     </div>
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useSettingsStore } from '@/store';
-import Message from '@/components/message';
-import { CheckCircleOutlined, MailOutlined } from '@ant-design/icons-vue';
+import { useRouter } from 'vue-router';
+import Submenu from './Submenu.vue';
 
 const openKeys = ref([]);
 const selectedKeys = ref([]);
@@ -35,15 +44,10 @@ const settingsStore = useSettingsStore();
 
 const menus = computed(() => settingsStore.menus);
 
-setTimeout(() => {
-    Message.success('我你爹');
-}, 1000); 
-
-setTimeout(() => {
-    Message.error('傻逼吧你');
-}, 4000); 
-
-
+const $router = useRouter();
+const onMenuChange = ({ item, key, keyPath }: Record<string, string>) => {
+    $router.push(key);
+};
 </script>
 <style lang="less" scoped>
 .side-menu {

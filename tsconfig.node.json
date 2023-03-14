@@ -6,6 +6,6 @@
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
   },
-  "include": ["vite.config.ts", "./src/utils/themeUtil.ts"],
+  "include": ["vite.config.ts"],
 
 }

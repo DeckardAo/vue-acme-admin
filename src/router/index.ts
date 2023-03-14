@@ -7,6 +7,8 @@ import Layout from '@/layout';
 
 
 const routes: RouteRecordRaw[] = parseRouter(asyncRouter);
+console.log(routes);
+
 
 const defaultRoutes: RouteRecordRaw[] = [
     {

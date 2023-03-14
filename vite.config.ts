@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import Components from 'unplugin-vue-components/vite';
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
+// @ts-ignore
 import { getModifyVars } from './src/utils/themeUtil';
 import WindiCss from 'vite-plugin-windicss';
 import vueJsx from '@vitejs/plugin-vue-jsx';

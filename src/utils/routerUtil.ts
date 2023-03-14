@@ -1,39 +1,22 @@
 import { Router } from '@/types/router';
 import { RouteRecordRaw } from 'vue-router';
 
-const permissions: string[] = ['dashboard'];
+const permissionList: string[] = ['components', 'message'];
 
-export function parseRouter(routers: Router[]) {
+export function parseRouter(componentsRouter: Router[]): RouteRecordRaw[] {
 
-    function parase(routes: Router[]): RouteRecordRaw[] {
-        const res: RouteRecordRaw[] = [];
-        routes.map(route => {
-            if (route.meta && route.meta.permission) {
-                // 权限校验                
-                if (permissions.includes(route.meta.permission)) {
-                    if (!route.children || route.children.length === 0) {
-                        res.push(route as RouteRecordRaw);
-                
-                    } else {
-
-                        // 递归调用
-                        const item: RouteRecordRaw = route as RouteRecordRaw;
-                        item.children = parase(route.children);
-                    }
-                }
-            } else if(route.children && route.children.length > 0) {
-                // 递归调用
-                const item: RouteRecordRaw = route as RouteRecordRaw;
-                item.children = parase(route.children);
-                res.push(item as RouteRecordRaw);
-               
-            } else {
-                res.push(route as RouteRecordRaw);
-            }
+    const removeRouterByPermission = (routers: Router[], permissions: string[]) => { 
+        routers.forEach(router => { 
+            if (router.meta && router.meta.permission && !permissions.includes(router.meta.permission)) {
+                routers.splice(routers.indexOf(router), 1); 
+            } 
+            if (router.children && router.children.length > 0) { 
+                removeRouterByPermission(router.children, permissions); 
+            } 
         });
+    }; 
+     
+    removeRouterByPermission(componentsRouter, permissionList);
 
-        return res;
-    }
-
-    return parase(routers);
+    return componentsRouter as RouteRecordRaw[];
 }

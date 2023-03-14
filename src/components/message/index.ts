@@ -1,4 +1,4 @@
-import { defineComponent, render as vueRender, createVNode, CSSProperties, PropType } from 'vue';
+import { defineComponent, render as vueRender, PropType, h, VueElement } from 'vue';
 import './style.less';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons-vue';
 import { Recorable } from '@/types/types';
@@ -9,7 +9,7 @@ type messageType = 'success' | 'info' | 'warning' | 'error' | 'loading';
 const MessageComponent = defineComponent({
     props: {
         type: {
-            type: Object as PropType<messageType>,
+            type: String as PropType<string>,
             required: true
         },
         message: {
@@ -18,21 +18,26 @@ const MessageComponent = defineComponent({
         }
     },
     render() {
-        return <div className={`acme-message acme-message-${this.type}`}>
-            {
-                this.type === 'success'? <CheckCircleOutlined /> : ''
-            }
-            {
-                this.type === 'error'? <CloseCircleOutlined /> : ''
-            }
-            { this.message }
-        </div>;
+        const { message } = this;
+
+        const messageIconMap : Record<string, unknown> = {
+            success: CheckCircleOutlined,
+            error: CloseCircleOutlined,
+        };
+
+        return h('div', 
+            {class: `acme-message acme-message-${this.type}`},
+            {default: () => [
+                h(messageIconMap[this.type] as VueElement),
+                h('span',{style: 'margin-left: 10px'}, message)
+            ]}
+        );
     }
 });
 
 
 function showMessage(message: string, style: Recorable = {}, type: messageType = 'success', duration?: number) {
-    const vm = createVNode(MessageComponent, {message, type}, message);
+    const vm = h(MessageComponent, {message, type}, {default: () => message});
     const div = document.createElement('div');
     document.body.appendChild(div);
 
@@ -59,18 +64,22 @@ function showMessage(message: string, style: Recorable = {}, type: messageType =
 
     vueRender(vm, div);
 }
-
-export function success(message: string) {
-    showMessage(message, {}, 'success', 2000);
+export function success(message: string):void;
+export function success(message: string, duration: number):void;
+export function success(message: string, duration?: number):void{
+    showMessage(message, {}, 'success', duration || 2000);
 }
 
-export function error(message: string) {
-    showMessage(message, {}, 'error', 2000);
+
+export function error(message: string):void;
+export function error(message: string, duration: number):void;
+export function error(message: string, duration?: number):void {
+    showMessage(message, {}, 'error', duration || 2000);
 }
 
 export interface MessageInterface {
-    success(message: string): void;
-    error(message: string): void;
+    success(message: string, duration?:number): void;
+    error(message: string, duration?:number): void;
 }
 
 const Message: MessageInterface = {

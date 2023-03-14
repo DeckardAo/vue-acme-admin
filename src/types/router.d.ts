@@ -12,6 +12,6 @@ export interface Router {
     name: string; 
     meta?: RouterMeta;
     redirect?: string;
-    component: any;
+    component?: any;
     children?: Router[];
 }
