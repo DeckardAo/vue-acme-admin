@@ -1,43 +1,57 @@
-import { defineComponent, render as vueRender, PropType, h, VueElement } from 'vue';
-import './style.less';
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons-vue';
+import { render as vueRender, createVNode, VNode } from 'vue';
 import { Recorable } from '@/types/types';
+import MessageComponent from './Message.vue';
 
+export type messageType = 'success' | 'info' | 'warning' | 'error' | 'loading';
+class Message {
 
-type messageType = 'success' | 'info' | 'warning' | 'error' | 'loading';
+    // 结束动画的持续时间 在此时间后 组件元素将从dom树中移除
+    private leaveTransitionDuration = 300;
+    private static instance: Message | null = null;
+    private counter = 0;
 
-const MessageComponent = defineComponent({
-    props: {
-        type: {
-            type: String as PropType<string>,
-            required: true
-        },
-        message: {
-            type: String,
-            required: true
+    showMessage(message: string, style: Recorable = {}, type: messageType = 'success', duration?: number) {
+        this.counter++;
+
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+        div.classList.add('acme-message-box');
+
+        const messageStyle = {top: (60 * this.counter) + 'px'};
+        const vm = createVNode(MessageComponent, {message, type, duration, style: messageStyle});
+
+        const styleKeys = Object.keys(style);
+        styleKeys.forEach((key: string) => {
+            // @ts-ignore
+            div.style[key] = style[key];
+        });
+    
+    
+        if (duration && duration != 0) {
+            // 持续时间结束后开始关闭动画
+            setTimeout(() => {
+                vueRender(null, div);
+                this.counter--;
+                document.body.removeChild(div);
+            }, duration + this.leaveTransitionDuration);
         }
-    },
-    render() {
-        const { message } = this;
-
-        const messageIconMap : Record<string, unknown> = {
-            success: CheckCircleOutlined,
-            error: CloseCircleOutlined,
-        };
-
-        return h('div', 
-            {class: `acme-message acme-message-${this.type}`},
-            {default: () => [
-                h(messageIconMap[this.type] as VueElement),
-                h('span',{style: 'margin-left: 10px'}, message)
-            ]}
-        );
+    
+        vueRender(vm, div);
     }
-});
+
+    static getInstance() {
+        if (Message.instance !== null) return Message.instance;
+
+        Message.instance = new Message();
+        return Message.instance;
+
+    }
+}
 
 
 function showMessage(message: string, style: Recorable = {}, type: messageType = 'success', duration?: number) {
-    const vm = h(MessageComponent, {message, type}, {default: () => message});
+    
+    const vm = createVNode(MessageComponent, {message, type});
     const div = document.createElement('div');
     document.body.appendChild(div);
 
@@ -53,28 +67,25 @@ function showMessage(message: string, style: Recorable = {}, type: messageType =
     if (duration && duration != 0) {
         // 持续时间结束后开始关闭动画
         setTimeout(() => {
-            div.classList.add('hide');
-            // 动画结束后销毁元素
-            setTimeout(() => {
-                document.body.removeChild(div);
-            }, 300);
-
+            vueRender(null, div);
         }, duration);
     }
 
     vueRender(vm, div);
 }
+
+
 export function success(message: string):void;
 export function success(message: string, duration: number):void;
 export function success(message: string, duration?: number):void{
-    showMessage(message, {}, 'success', duration || 2000);
+    Message.getInstance().showMessage(message, {}, 'success', duration || 2000);
 }
 
 
 export function error(message: string):void;
 export function error(message: string, duration: number):void;
 export function error(message: string, duration?: number):void {
-    showMessage(message, {}, 'error', duration || 2000);
+    Message.getInstance().showMessage(message, {}, 'error', duration || 2000);
 }
 
 export interface MessageInterface {
@@ -82,9 +93,9 @@ export interface MessageInterface {
     error(message: string, duration?:number): void;
 }
 
-const Message: MessageInterface = {
+const MessageIns: MessageInterface = {
     success,
     error
 };
 
-export default Message;
+export default MessageIns;

@@ -32,6 +32,12 @@
                     成功提示
                 </a-button>
                 <a-button
+                    type="primary"
+                    @click="onHtmlSuccess"
+                >
+                    自定义HTML的成功提示
+                </a-button>
+                <a-button
                     danger
                     @click="onError"
                 >
@@ -52,6 +58,10 @@ import { message } from 'ant-design-vue';
 
 const onSuccess = () => {
     Message.success('成功提示');
+};
+
+const onHtmlSuccess = () => {
+    Message.success('<span class="text-red-600">自定义HTML的成功提示</span>');
 };
 
 const onError = () => {

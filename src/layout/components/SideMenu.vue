@@ -35,6 +35,7 @@ import { computed, ref } from 'vue';
 import { useSettingsStore } from '@/store';
 import { useRouter } from 'vue-router';
 import Submenu from './Submenu.vue';
+import { PieChartOutlined } from '@ant-design/icons-vue';
 
 const openKeys = ref([]);
 const selectedKeys = ref([]);

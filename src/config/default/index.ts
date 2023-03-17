@@ -3,6 +3,7 @@
  * 所有的可配置项都可以在这里找到
  ************************/
 export default {
+    appName: 'Acme Framework',
     theme: {
         primary : '#1890ff',              // 全局主色
         link    : '#1890ff',              // 链接色
